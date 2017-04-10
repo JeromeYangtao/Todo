@@ -65,10 +65,10 @@
 	    created: function created() {
 	        var _this = this;
 
-	        // onbeforeunload文档：https://developer.mozilla.org/zh-CN/docs/Web/API/Window/onbeforeunload
+	        // 窗口关闭前触发函数
 	        window.onbeforeunload = function () {
-	            var dataString = JSON.stringify(_this.todoList); // JSON 文档: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/JSON
-	            window.localStorage.setItem('myTodos', dataString); // 看文档https://developer.mozilla.org/zh-CN/docs/Web/API/Window/localStorage
+	            var dataString = JSON.stringify(_this.todoList);
+	            window.localStorage.setItem('myTodos', dataString);
 	        };
 
 	        var oldDataString = window.localStorage.getItem('myTodos');
