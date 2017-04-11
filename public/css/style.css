@@ -25,6 +25,10 @@ h1 {
     border-radius: 5px;
 }
 
+#app .newTask {
+    text-align: center;
+}
+
 #app .newTask input {
     width: 10em;
 }
