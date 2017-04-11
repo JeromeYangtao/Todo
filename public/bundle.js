@@ -67,13 +67,21 @@
 
 	        // 窗口关闭前触发函数
 	        window.onbeforeunload = function () {
+	            // 待办事项的数据
 	            var dataString = JSON.stringify(_this.todoList);
 	            window.localStorage.setItem('myTodos', dataString);
+
+	            // 输入框输入但未提交的内容
+	            window.sessionStorage.setItem('puttingTodo', _this.newTodo);
 	        };
 
+	        // 读取待办事项的数据
 	        var oldDataString = window.localStorage.getItem('myTodos');
 	        var oldData = JSON.parse(oldDataString);
 	        this.todoList = oldData || [];
+
+	        // 读取待办事项的数据
+	        this.newTodo = window.sessionStorage.getItem('puttingTodo') || '';
 	    },
 	    methods: {
 	        addTodo: function addTodo() {

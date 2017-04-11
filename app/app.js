@@ -10,13 +10,21 @@ var app = new Vue({
     created: function() {
         // 窗口关闭前触发函数
         window.onbeforeunload = () => {
+            // 待办事项的数据
             let dataString = JSON.stringify(this.todoList)
             window.localStorage.setItem('myTodos', dataString)
+
+            // 输入框输入但未提交的内容
+            window.sessionStorage.setItem('puttingTodo', this.newTodo)
         }
 
+        // 读取待办事项的数据
         let oldDataString = window.localStorage.getItem('myTodos')
         let oldData = JSON.parse(oldDataString)
         this.todoList = oldData || []
+
+        // 读取待办事项的数据
+        this.newTodo = window.sessionStorage.getItem('puttingTodo') || ''
     },
     methods: {
         addTodo: function() {
