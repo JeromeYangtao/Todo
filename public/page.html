@@ -12,22 +12,58 @@
 <body>
     <h1>Todo</h1>
     <div id="app">
-        <div class="newTask">
-            <input type="text" v-model="newTodo" @keypress.enter="addTodo">
-        </div>
-        <ol class="todos">
-            <li v-for="todo in todoList">
-                {{ todo.title }}
-                <input type="checkbox" v-model="todo.done">
-                <span v-if="todo.done">已完成</span>
-                <span v-else>未完成</span>
-                <button @click="removeTodo(todo)">X</button>
+        <section id="signInAndSignUp">
+            <div>
+                <label><input type="radio" name="type" value="signUp" v-model="actionType">注册</label>
+                <label><input type="radio" name="type" value="login" v-model="actionType">登入</label>
+            </div>
+            <div class="signUp" v-if="actionType=='signUp'">
+                <form>
+                    <div class="formRow">
+                        用户名<input type="text">
+                    </div>
+                    <div class="formRow">
+                        密码<input type="password">
+                    </div>
+                    <div class="formActions">
+                        <input type="submit" value="注册">
+                    </div>
+                </form>
+            </div>
+            <div class="login" v-if="actionType=='login'">
+                <form>
+                    <div class="formRow">
+                        用户名<input type="text">
+                    </div>
+                    <div class="formRow">
+                        密码<input type="password">
+                    </div>
+                    <div class="formActions">
+                        <input type="submit" value="登路">
+                    </div>
+                </form>
+            </div>
+        </section>
 
-                <time> 添加时间{{todo.createdAt}} </time>
+        <section id="todo">
+            <div class="newTask">
+                <input type="text" v-model="newTodo" @keypress.enter="addTodo">
+            </div>
+            <ol class="todos">
+                <li v-for="todo in todoList">
+                    {{ todo.title }}
+                    <input type="checkbox" v-model="todo.done">
+                    <span v-if="todo.done">已完成</span>
+                    <span v-else>未完成</span>
+                    <button @click="removeTodo(todo)">X</button>
 
-            </li>
-        </ol>
+                    <time> 添加时间{{todo.createdAt}} </time>
+
+                </li>
+            </ol>
+        </section>
     </div>
+
     <script src="bundle.js"></script>
 </body>
 
