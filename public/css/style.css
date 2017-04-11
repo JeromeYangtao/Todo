@@ -41,3 +41,8 @@ h1 {
     width: 20px;
     height: 20px;
 }
+
+#app .todos time {
+    display: block;
+    padding-top: 5px;
+}

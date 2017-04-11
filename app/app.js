@@ -28,9 +28,11 @@ var app = new Vue({
     },
     methods: {
         addTodo: function() {
+            let time = new Date()
+            let addTime = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate()
             this.todoList.push({
                 title: this.newTodo,
-                createdAt: new Date(),
+                createdAt: addTime,
                 done: false // 添加一个 done 属性
             })
 

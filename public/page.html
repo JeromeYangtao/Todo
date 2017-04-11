@@ -22,6 +22,9 @@
                 <span v-if="todo.done">已完成</span>
                 <span v-else>未完成</span>
                 <button @click="removeTodo(todo)">X</button>
+
+                <time> 添加时间{{todo.createdAt}} </time>
+
             </li>
         </ol>
     </div>
