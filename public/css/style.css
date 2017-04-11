@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #2A3161;
+}
+
+h1 {
+    margin-top: 50px;
+}
+
+#app {
+    max-width: 250px;
+    min-width: 100px;
+    margin: 20px;
+    background: #4757A0;
+    padding: 20px 15px 80px 15px;
+    border-radius: 5px;
+}
+
+#app .newTask input {
+    width: 10em;
+}
+
+#app .todos {
+    margin: 20px;
+}
+
+#app .todos li {
+    margin: 15px 0;
+}
+
+#app .todos button {
+    width: 20px;
+    height: 20px;
+}
