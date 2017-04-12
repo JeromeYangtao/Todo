@@ -43,6 +43,9 @@ var app = new Vue({
 
         // 读取待办事项的数据
         this.newTodo = window.sessionStorage.getItem('puttingTodo') || ''
+
+        // 检查用户是否登陆
+        this.currentUser = this.getCurrentUser()
     },
     methods: {
         addTodo: function() {
@@ -81,8 +84,18 @@ var app = new Vue({
             });
         },
         getCurrentUser: function() {
-            let { id, createdAt, attributes: { username } } = AV.User.current()
-            return { id, username, createdAt }
+            let current = AV.User.current()
+            if (current) {
+                let { id, createdAt, attributes: { username } } = current
+                return { id, username, createdAt }
+            } else {
+                return null
+            }
+        },
+        logout: function() {
+            AV.User.logOut()
+            this.currentUser = null
+            window.location.reload()
         }
     }
 })

@@ -46,8 +46,9 @@
         </section>
 
         <section id="todo" v-if="currentUser">
+            <p>用户：{{currentUser.username}}<button @click="logout">退出登陆</button></p>
             <div class="newTask">
-                待办事项:<input type="text" v-model="newTodo" @keypress.enter="addTodo">
+                添加事项:<input type="text" v-model="newTodo" @keypress.enter="addTodo">
             </div>
             <ol class="todos">
                 <li v-for="todo in todoList">
