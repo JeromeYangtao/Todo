@@ -12,18 +12,18 @@
 <body>
     <h1>Todo</h1>
     <div id="app">
-        <section id="signInAndSignUp">
+        <section id="signInAndSignUp" v-if="!currentUser">
             <div>
                 <label><input type="radio" name="type" value="signUp" v-model="actionType">注册</label>
-                <label><input type="radio" name="type" value="login" v-model="actionType">登入</label>
+                <label><input type="radio" name="type" value="login" v-model="actionType">登录</label>
             </div>
             <div class="signUp" v-if="actionType=='signUp'">
-                <form>
+                <form @submit.prevent=signUp>
                     <div class="formRow">
-                        用户名<input type="text">
+                        用户名<input type="text" v-model="formData.username">
                     </div>
                     <div class="formRow">
-                        密码<input type="password">
+                        密码<input type="password" v-model="formData.password">
                     </div>
                     <div class="formActions">
                         <input type="submit" value="注册">
@@ -31,23 +31,23 @@
                 </form>
             </div>
             <div class="login" v-if="actionType=='login'">
-                <form>
+                <form @submit.prevent="login">
                     <div class="formRow">
-                        用户名<input type="text">
+                        用户名<input type="text" v-model="formData.username">
                     </div>
                     <div class="formRow">
-                        密码<input type="password">
+                        密码<input type="password" v-model="formData.password">
                     </div>
                     <div class="formActions">
-                        <input type="submit" value="登路">
+                        <input type="submit" value="登录">
                     </div>
                 </form>
             </div>
         </section>
 
-        <section id="todo">
+        <section id="todo" v-if="currentUser">
             <div class="newTask">
-                <input type="text" v-model="newTodo" @keypress.enter="addTodo">
+                待办事项:<input type="text" v-model="newTodo" @keypress.enter="addTodo">
             </div>
             <ol class="todos">
                 <li v-for="todo in todoList">

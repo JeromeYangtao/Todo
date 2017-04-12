@@ -1,12 +1,29 @@
-import bar from './bar';
+import bar from './bar'
 import Vue from 'vue'
+import AV from 'leancloud-storage'
+
+
+// 初始化LeanCloud SDK
+var APP_ID = 'ABfjkfJDuyHlgvMvoRs9GEhx-gzGzoHsz'
+var APP_KEY = 'QjmfmAu5R4opGUOjaMHQJ92O'
+AV.init({
+    appId: APP_ID,
+    appKey: APP_KEY
+})
+
+
 
 var app = new Vue({
     el: '#app',
     data: {
         actionType: 'signUp',
+        formData: {
+            username: '',
+            password: ''
+        },
         newTodo: '',
-        todoList: []
+        todoList: [],
+        currentUser: null
     },
     created: function() {
         // 窗口关闭前触发函数
@@ -45,8 +62,28 @@ var app = new Vue({
 
             // 从index开始删除1个元素
             this.todoList.splice(index, 1)
+        },
+        signUp: function() {
+            let user = new AV.User();
+            user.setUsername(this.formData.username);
+            user.setPassword(this.formData.password);
+            user.signUp().then((loginedUser) => {
+                this.currentUser = this.getCurrentUser()
+            }, function(error) {
+                alert('注册失败')
+            });
+        },
+        login: function() {
+            AV.User.logIn(this.formData.username, this.formData.password).then((loginedUser) => {
+                this.currentUser = this.getCurrentUser()
+            }, (error) => {
+                alert('登录失败')
+            });
+        },
+        getCurrentUser: function() {
+            let { id, createdAt, attributes: { username } } = AV.User.current()
+            return { id, username, createdAt }
         }
-
     }
 })
 
