@@ -85,26 +85,62 @@
 
 	        // 窗口关闭前触发函数
 	        window.onbeforeunload = function () {
-	            // 待办事项的数据
-	            var dataString = JSON.stringify(_this.todoList);
-	            window.localStorage.setItem('myTodos', dataString);
-
 	            // 输入框输入但未提交的内容
 	            window.sessionStorage.setItem('puttingTodo', _this.newTodo);
 	        };
-
-	        // 读取待办事项的数据
-	        var oldDataString = window.localStorage.getItem('myTodos');
-	        var oldData = JSON.parse(oldDataString);
-	        this.todoList = oldData || [];
 
 	        // 读取待办事项的数据
 	        this.newTodo = window.sessionStorage.getItem('puttingTodo') || '';
 
 	        // 检查用户是否登陆
 	        this.currentUser = this.getCurrentUser();
+	        this.fetchTodos();
 	    },
 	    methods: {
+	        fetchTodos: function fetchTodos() {
+	            var _this2 = this;
+
+	            if (this.currentUser) {
+	                var query = new _leancloudStorage2.default.Query('AllTodos');
+	                query.find().then(function (todos) {
+	                    var avAllTodos = todos[0];
+	                    var id = avAllTodos.id;
+	                    _this2.todoList = JSON.parse(avAllTodos.attributes.content);
+	                    _this2.todoList.id = id;
+	                }, function (error) {
+	                    console.error(error);
+	                });
+	            }
+	        },
+	        updateTodos: function updateTodos() {
+	            var dataString = JSON.stringify(this.todoList);
+	            var avTodos = _leancloudStorage2.default.Object.createWithoutData('AllTodos', this.todoList.id);
+	            avTodos.set('content', dataString);
+	            avTodos.save().then(function () {
+	                console.log('更新成功');
+	            });
+	        },
+	        saveTodos: function saveTodos() {
+	            var _this3 = this;
+
+	            var dataString = JSON.stringify(this.todoList);
+	            var AVTodos = _leancloudStorage2.default.Object.extend('AllTodos');
+	            var avTodos = new AVTodos();
+	            avTodos.set('content', dataString);
+	            avTodos.save().then(function (todo) {
+	                _this3.todoList.id = todo.id;
+	                console.log('保存成功');
+	            }, function (error) {
+	                alert('保存失败');
+	            });
+	        },
+	        saveOrUpdateTodos: function saveOrUpdateTodos() {
+	            if (this.todoList.id) {
+	                this.updateTodos();
+	            } else {
+	                this.saveTodos();
+	            }
+	        },
 	        addTodo: function addTodo() {
 	            var time = new Date();
 	            var addTime = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate();
@@ -115,6 +151,7 @@
 	            });
 
 	            this.newTodo = ''; // 变成空
+	            this.saveOrUpdateTodos();
 	        },
 	        removeTodo: function removeTodo(todo) {
 	            // 找到给定元素的第一个索引
@@ -122,27 +159,34 @@
 
 	            // 从index开始删除1个元素
 	            this.todoList.splice(index, 1);
+	            this.saveOrUpdateTodos();
 	        },
 	        signUp: function signUp() {
-	            var _this2 = this;
+	            var _this4 = this;
 
 	            var user = new _leancloudStorage2.default.User();
 	            user.setUsername(this.formData.username);
 	            user.setPassword(this.formData.password);
 	            user.signUp().then(function (loginedUser) {
-	                _this2.currentUser = _this2.getCurrentUser();
+	                _this4.currentUser = _this4.getCurrentUser();
 	            }, function (error) {
-	                alert('注册失败');
+	                console.log(error);
 	            });
 	        },
 	        login: function login() {
-	            var _this3 = this;
+	            var _this5 = this;
 
 	            _leancloudStorage2.default.User.logIn(this.formData.username, this.formData.password).then(function (loginedUser) {
-	                _this3.currentUser = _this3.getCurrentUser();
+	                _this5.currentUser = _this5.getCurrentUser();
+	                _this5.fetchTodos();
 	            }, function (error) {
-	                alert('登录失败');
+	                console.log(error);
 	            });
+	        },
+	        logout: function logout() {
+	            _leancloudStorage2.default.User.logOut();
+	            this.currentUser = null;
+	            window.location.reload();
 	        },
 	        getCurrentUser: function getCurrentUser() {
 	            var current = _leancloudStorage2.default.User.current();
@@ -155,11 +199,6 @@
 	            } else {
 	                return null;
 	            }
-	        },
-	        logout: function logout() {
-	            _leancloudStorage2.default.User.logOut();
-	            this.currentUser = null;
-	            window.location.reload();
 	        }
 	    }
 	});
